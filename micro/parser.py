@@ -77,6 +77,11 @@ def parsestmt(tokens):
             tokens.eat()
         return WhileNode(cond, body)
     
+    # break statement
+    if tokens.peek() == "break":
+        tokens.eat()
+        return BreakNode()
+    
     # variable assignment
     if tokens.can_eat() and tokens.peek(1) == "=":
         name = tokens.eat()

@@ -9,6 +9,10 @@ class OutputNode:
     def eval(self, env):
         print(self.expr.eval(env))
 
+# break exception
+class Break(Exception):
+    pass
+
 # literal node
 class LiteralNode:
     def __init__(self, value):
@@ -94,6 +98,16 @@ class WhileNode:
             self.body = body
             
     def eval(self, env):
-        while self.cond.eval(env) != 0:
-            for node in self.body:
-                node.eval(env) 
+        try:
+            while self.cond.eval(env) != 0:
+                for node in self.body:
+                    node.eval(env)
+        except Break:
+            pass
+        
+class BreakNode:
+    def __init__(self):
+        pass
+    
+    def eval(self, env):
+        raise Break
