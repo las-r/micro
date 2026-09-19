@@ -23,7 +23,6 @@ def parseatom(tokens):
         else:
             raise SyntaxError(f"Expected closing ']' in array definition")
         node = ArrayNode(items)
-        # array indexing (moved here so `[1,2,3]:0` also works)
         while tokens.peek() == ":":
             tokens.eat()
             iexpr = parseatom(tokens)
