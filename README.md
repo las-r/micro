@@ -4,6 +4,8 @@ A small, generic interpreted scripting language.
 ## Overview
 micro is a minimal, dynamically-typed scripting language with somewhat Ruby-like syntax, first-class functions, and arrays. It's designed to be small enough to read the whole implementation in one sitting, while still being expressive enough for real programs.
 
+The entirety of the source code, without any minification, is under 500 lines.
+
 ## Getting Started
 ```
 python -m micro yourfile.mic
