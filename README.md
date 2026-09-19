@@ -13,13 +13,13 @@ python -m micro yourfile.mic
 ```
 
 ## Data Types
-| Type    | Description                          |
-|---------|---------------------------------------|
-| `int`   | Whole numbers                         |
-| `float` | Decimal numbers                       |
-| `str`   | Strings, written `"like this"`        |
-| `arr`   | Arrays, written `[1, 2, 3]`           |
-| `func`  | Functions (first-class, see below)    |
+| Type | Description |
+|---|---|
+| `int` | Whole numbers |
+| `float` | Decimal numbers |
+| `str` | Strings, written `"like this"` |
+| `arr` | Arrays, written `[1, 2, 3]` |
+| `func` | Functions (first-class, see below) |
 
 There is no dedicated boolean type. Comparisons and logic operators produce
 `int`s (`0` for false, any nonzero value, conventionally `1`, for true), and
@@ -116,15 +116,15 @@ how you make changes stick within a single variable.
 ```
 
 ## Built-in Functions
-| Function        | Returns | Description                                      |
-|-----------------|---------|---------------------------------------------------|
-| `print(x)`      | | Prints `x`                                        |
-| `input(x)`      | | Prompts with `x` and reads a line                 |
-| `type(x)`       | `str`   | Returns the type of `x` (`"int"`, `"arr"`, etc.)  |
-| `conv(x, t)`    | `<t>`     | Converts `x` to type `t` (`"int"`, `"float"`, `"str"`, `"arr"`) |
-| `len(x)`        | `int`   | Length of an array or string                      |
-| `add(a, i, x)`  | `arr`   | Returns a copy of `a` with `x` inserted at index `i` |
-| `del(a, i)`     | `arr`   | Returns a copy of `a` with the item at index `i` removed |
+| Function | Return Type | Description |
+|---|---|---|
+| `print(x)`      | | Prints `x` |
+| `input(x)`      | | Prompts with `x` and reads a line |
+| `type(x)`       | `str` | Returns the type of `x` (`"int"`, `"arr"`, etc.) |
+| `conv(x, t)`    | `<t>` | Converts `x` to type `t` (`"int"`, `"float"`, `"str"`, `"arr"`) |
+| `len(x)`        | `int` | Length of an array or string |
+| `add(a, i, x)`  | `arr` | Returns a copy of `a` with `x` inserted at index `i` |
+| `del(a, i)`     | `arr` | Returns a copy of `a` with the item at index `i` removed |
 
 `add` and `del` never modify the original array, instead they return a new one.
 
