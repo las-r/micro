@@ -103,6 +103,18 @@ print(a:0)   // 1, the function got its own copy of a
 
 This copying is shallow. Indexing into an array (`arr:i = val`) always mutates that array's own storage in place, which is how you make changes stick within a single variable.
 
+## Imports
+Import another `.mic` file with `import`:
+```text
+import "math.mic"
+
+print(square(5))
+```
+
+The imported file is executed in the current environment, so any variables or functions it defines become available to the importing file.
+
+Import paths are resolved relative to the file containing the import.
+
 ## Comments
 ```
 // this is a comment, running to the end of the line
