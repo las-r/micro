@@ -30,3 +30,16 @@ class Tokens:
     
     def peek(self, off=0):
         return self.tokens[self.i + off]
+    
+# tokenizer
+def tokenize(code):
+    tokens = []
+    for match in REGEX.finditer(code):
+        typ = match.lastgroup
+        val = match.group()
+        if typ in ("SKIP", "COMMENT"):
+            continue
+        elif typ == "MISMATCH":
+            raise SyntaxError(f"Unexpected token: {val}")
+        tokens.append(val)
+    return Tokens(tokens)
