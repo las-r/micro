@@ -5,3 +5,13 @@ func map(a, f)
     end
     return a
 end
+
+func filter(a, f)
+    i = 0
+    while i < len(a)
+        if !f(a:i)
+            del(a, i)
+        end
+    end
+    return a
+end
