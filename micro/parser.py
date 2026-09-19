@@ -9,43 +9,79 @@ BINOPS = ["+", "-", "*", "/", "&", "|", "^", "==", "<=", ">=", "<", ">", "&&", "
 
 # atom parser
 def parseatom(tokens):
+    # array literals
+    if tokens.peek() == "[":
+        tokens.eat()
+        items = []
+        if tokens.peek() != "]":
+            items.append(parseexpr(tokens))
+            while tokens.peek() == ",":
+                tokens.eat()
+                items.append(parseexpr(tokens))
+        if tokens.peek() == "]":
+            tokens.eat()
+        else:
+            raise SyntaxError(f"Expected closing ']' in array definition")
+        node = ArrayNode(items)
+        # array indexing (moved here so `[1,2,3]:0` also works)
+        while tokens.peek() == ":":
+            tokens.eat()
+            iexpr = parseatom(tokens)
+            node = IndexNode(node, iexpr)
+        return node
+
     # unary ops
     if tokens.peek() in UNOPS:
         op = tokens.eat()
         a = parseatom(tokens)
         return UnaryOpNode(op, a)
-    
+
     # parentheses
     if tokens.peek() == "(":
         tokens.eat()
         expr = parseexpr(tokens)
         tokens.eat()
-        return expr
-    
+        node = expr
+        while tokens.peek() == ":":
+            tokens.eat()
+            iexpr = parseatom(tokens)
+            node = IndexNode(node, iexpr)
+        return node
+
     # literal, variable, and function call
     tok = tokens.eat()
     if tok.startswith('"') and tok.endswith('"'):
-        return LiteralNode(tok[1:-1])
-    try:
-        return LiteralNode(int(tok))
-    except ValueError:
+        node = LiteralNode(tok[1:-1])
+    else:
         try:
-            return LiteralNode(float(tok))
+            node = LiteralNode(int(tok))
         except ValueError:
-            if tokens.peek() == "(":
-                tokens.eat()
-                args = []
-                if tokens.peek() != ")":
-                    args.append(parseexpr(tokens))
-                    while tokens.peek() == ",":
-                        tokens.eat()
-                        args.append(parseexpr(tokens))
-                if tokens.peek() == ")":
+            try:
+                node = LiteralNode(float(tok))
+            except ValueError:
+                if tokens.peek() == "(":
                     tokens.eat()
+                    args = []
+                    if tokens.peek() != ")":
+                        args.append(parseexpr(tokens))
+                        while tokens.peek() == ",":
+                            tokens.eat()
+                            args.append(parseexpr(tokens))
+                    if tokens.peek() == ")":
+                        tokens.eat()
+                    else:
+                        raise SyntaxError(f"Expected closing ')' in function call '{tok}'")
+                    node = CallNode(tok, args)
                 else:
-                    raise SyntaxError(f"Expected closing ')' in function call '{tok}'")
-                return CallNode(tok, args)
-            return VariableNode(tok)
+                    node = VariableNode(tok)
+
+    # array indexing
+    while tokens.peek() == ":":
+        tokens.eat()
+        iexpr = parseatom(tokens)
+        node = IndexNode(node, iexpr)
+
+    return node
 
 # expression parser
 def parseexpr(tokens):
@@ -121,15 +157,19 @@ def parsestmt(tokens):
             expr = None
         return ReturnNode(expr)
     
-    # variable assignment
-    if tokens.can_eat() and tokens.peek(1) == "=":
-        name = tokens.eat()
+    # assignment
+    lhs = parseexpr(tokens)
+    if tokens.peek() == "=":
         tokens.eat()
-        expr = parseexpr(tokens)
-        return AssignNode(name, expr)
-
-    # fallback expression parse
-    return parseexpr(tokens)
+        rhs = parseexpr(tokens)
+        if isinstance(lhs, VariableNode):
+            return AssignNode(lhs.name, rhs)
+        if isinstance(lhs, IndexNode):
+            return IndexAssignNode(lhs.arr, lhs.idx, rhs)
+        raise SyntaxError("Invalid assignment target")
+    
+    # fallback expression
+    return lhs
 
 # parser
 def parse(tokens):

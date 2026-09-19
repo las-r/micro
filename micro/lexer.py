@@ -9,7 +9,7 @@ REGEX = re.compile(r"""
     (?P<NUMBER>   \d+(?:\.\d+)?) |
     (?P<STRING>   "(?:\\.|[^"\\])*") |
     (?P<KEYWORD>  \b(end|if|else|while|func|break|return)\b) |
-    (?P<OPER>     ==|<=|>=|&&|\|\||[+\-*/<>~&^()!:=,]) |
+    (?P<OPER>     ==|<=|>=|&&|\|\||[+\-*/<>~&^()!:=,\[\]]) |
     (?P<IDENT>    [a-zA-Z_]\w*) |
     (?P<SKIP>     [ \t\r\n]+) |
     (?P<MISMATCH> .)
@@ -29,6 +29,8 @@ class Tokens:
         return self.tokens[self.i - inc]
     
     def peek(self, off=0):
+        if self.i + off >= len(self.tokens):
+            return ""
         return self.tokens[self.i + off]
     
 # tokenizer

@@ -37,9 +37,12 @@ class AssignNode:
     def __init__(self, name, expr):
         self.name = name
         self.expr = expr
-    
+
     def eval(self, env):
-        env[self.name] = self.expr.eval(env)
+        val = self.expr.eval(env)
+        if isinstance(val, list):
+            val = val.copy()
+        env[self.name] = val
     
 # operation nodes
 class UnaryOpNode:
@@ -78,6 +81,36 @@ class BinaryOpNode:
         if self.op == "<": return int(a < b)
         if self.op == ">": return int(a > b)
         raise Exception(f"Unknown binary operator: {self.op}")
+    
+# array nodes
+class ArrayNode:
+    def __init__(self, items):
+        self.items = items
+        
+    def eval(self, env):
+        return [i.eval(env) for i in self.items]
+    
+class IndexNode:
+    def __init__(self, arr, idx):
+        self.arr = arr
+        self.idx = idx
+        
+    def eval(self, env):
+        arr = self.arr.eval(env)
+        idx = self.idx.eval(env)
+        return arr[idx]
+    
+class IndexAssignNode:
+    def __init__(self, arr, idx, val):
+        self.arr = arr
+        self.idx = idx
+        self.val = val
+    
+    def eval(self, env):
+        arr = self.arr.eval(env)
+        idx = self.idx.eval(env)
+        val = self.val.eval(env)
+        arr[idx] = val
     
 # control flow nodes
 class IfNode:
@@ -135,12 +168,15 @@ class CallNode:
         func = env[self.name]
         eargs = [arg.eval(env) for arg in self.args]
         if callable(func):
+            eargs = [a.copy() if isinstance(a, list) else a for a in eargs]
             return func(*eargs)
         if isinstance(func, Function):
             if len(self.args) != len(func.params):
                 raise Exception(f"Argument mismatch for {self.name}")
             lenv = env.copy()
             for param, val in zip(func.params, eargs):
+                if isinstance(val, list):
+                    val = val.copy()
                 lenv[param] = val
             try:
                 res = None
