@@ -45,8 +45,29 @@ def parseexpr(tokens):
 
 # statement parser
 def parsestmt(tokens):
+    # temporary output statement
+    if tokens.peek() == "out":
+        tokens.eat()
+        expr = parseexpr(tokens)
+        return OutputNode(expr)
+    
     # if statement
     if tokens.peek() == "if":
+        tokens.eat()
+        cond = parseexpr(tokens)
+        body = []
+        while tokens.can_eat() and tokens.peek() not in ("else", "end"):
+            body.append(parsestmt(tokens))
+        ebody = []
+        if tokens.peek() == "else":
+            while tokens.can_eat() and tokens.peek() != "end":
+                ebody.append(parsestmt(tokens))
+        if tokens.peek() == "end":
+            tokens.eat()
+        return IfNode(cond, body, ebody)
+    
+    # while statement
+    if tokens.peek() == "while":
         tokens.eat()
         cond = parseexpr(tokens)
         body = []
@@ -54,7 +75,7 @@ def parsestmt(tokens):
             body.append(parsestmt(tokens))
         if tokens.peek() == "end":
             tokens.eat()
-        return IfNode(cond, body)
+        return WhileNode(cond, body)
     
     # variable assignment
     if tokens.can_eat() and tokens.peek(1) == "=":

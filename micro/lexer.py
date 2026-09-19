@@ -8,7 +8,7 @@ REGEX = re.compile(r"""
     (?P<COMMENT>  //[^\n]*) |
     (?P<NUMBER>   \d+(?:\.\d+)?) |
     (?P<STRING>   "(?:\\.|[^"\\])*") |
-    (?P<KEYWORD>  \b(if|end|while|func|break|return)\b) |
+    (?P<KEYWORD>  \b(if|end|while|func|break|return|out)\b) |
     (?P<OPER>     ==|<=|>=|&&|\|\||[+\-*/<>~&^()!:=,]) |
     (?P<IDENT>    [a-zA-Z_]\w*) |
     (?P<SKIP>     [ \t\r\n]+) |

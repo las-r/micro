@@ -19,7 +19,7 @@ def main():
     
     env = {}
     for node in nodes:
-        print(node.eval(env))
+        node.eval(env)
         
 if __name__ == "__main__":
     main()

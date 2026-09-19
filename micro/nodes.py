@@ -1,6 +1,14 @@
 # micro nodes
 # by las-r
 
+# temporary output node
+class OutputNode:
+    def __init__(self, expr):
+        self.expr = expr
+    
+    def eval(self, env):
+        print(self.expr.eval(env))
+
 # literal node
 class LiteralNode:
     def __init__(self, value):
@@ -67,12 +75,25 @@ class BinaryOpNode:
     
 # control flow nodes
 class IfNode:
-    def __init__(self, cond, body):
+    def __init__(self, cond, body, ebody):
         self.cond = cond
         self.body = body
-        #self.ebody = ebody
+        self.ebody = ebody
         
     def eval(self, env):
         if self.cond.eval(env) != 0:
             for node in self.body:
                 node.eval(env)
+        else:
+            for node in self.ebody:
+                node.eval(env)
+                
+class WhileNode:
+    def __init__(self, cond, body):
+            self.cond = cond
+            self.body = body
+            
+    def eval(self, env):
+        while self.cond.eval(env) != 0:
+            for node in self.body:
+                node.eval(env) 
