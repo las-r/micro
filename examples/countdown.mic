@@ -1,0 +1,6 @@
+n = conv(input("Enter a number: "), "int")
+
+while n > 0
+    n = n - 1
+    print(n)
+end

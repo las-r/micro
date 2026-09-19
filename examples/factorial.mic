@@ -1,0 +1,9 @@
+func fact(n)
+    if n <= 1
+        return 1
+    end
+    return n * fact(n - 1)
+end
+
+n = conv(input("Enter n for n!: "), "int")
+print(fact(n))

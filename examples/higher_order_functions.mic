@@ -1,0 +1,7 @@
+func map(a, f)
+    i = 0
+    while i < len(a)
+        a:i = f(a:i)
+    end
+    return a
+end

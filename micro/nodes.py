@@ -179,10 +179,8 @@ class CallNode:
                     val = val.copy()
                 lenv[param] = val
             try:
-                res = None
                 for node in func.body:
-                    res = node.eval(lenv)
-                return res
+                    node.eval(lenv)
             except Return as e:
                 return e.value
         raise Exception(f"'{self.name}' is not a callable function")
