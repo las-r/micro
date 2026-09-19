@@ -14,5 +14,8 @@ def main():
     with open(file) as f:
         code = f.read()
         
+    tokens = lexer.tokenize(code)
+    print(tokens.tokens)
+        
 if __name__ == "__main__":
     main()
