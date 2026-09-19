@@ -16,6 +16,7 @@ def main():
         
     tokens = lexer.tokenize(code)
     nodes = parser.parse(tokens)
+    
     env = {}
     for node in nodes:
         print(node.eval(env))
