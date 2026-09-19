@@ -1,3 +1,4 @@
+import os
 import sys
 from . import lexer
 from . import parser
@@ -53,7 +54,7 @@ def main():
         "del": ibdel
     }
     for node in nodes:
-        node.eval(env)
+        node.eval(env, [os.path.abspath(file)])
         
 if __name__ == "__main__":
     main()

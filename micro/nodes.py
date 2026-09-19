@@ -1,3 +1,5 @@
+import os
+
 # micro nodes
 # by las-r
 
@@ -20,7 +22,7 @@ class LiteralNode:
     def __init__(self, value):
         self.value = value
     
-    def eval(self, env):
+    def eval(self, env, paths=None):
         return self.value
 
 # variable nodes
@@ -28,7 +30,7 @@ class VariableNode:
     def __init__(self, name):
         self.name = name
     
-    def eval(self, env):
+    def eval(self, env, paths=None):
         if self.name in env:
             return env[self.name]
         raise Exception(f"Undefined variable: {self.name}")
@@ -38,7 +40,7 @@ class AssignNode:
         self.name = name
         self.expr = expr
 
-    def eval(self, env):
+    def eval(self, env, paths=None):
         val = self.expr.eval(env)
         if isinstance(val, list):
             val = val.copy()
@@ -50,7 +52,7 @@ class UnaryOpNode:
         self.op = op
         self.a = a
     
-    def eval(self, env):
+    def eval(self, env, paths=None):
         a = self.a.eval(env)
         if self.op == "-": return -a
         if self.op == "~": return ~a
@@ -63,7 +65,7 @@ class BinaryOpNode:
         self.op = op
         self.b = b
     
-    def eval(self, env):
+    def eval(self, env, paths=None):
         a = self.a.eval(env)
         if self.op == "&&": return int(a and self.b.eval(env))
         if self.op == "||": return int(a or self.b.eval(env))
@@ -87,7 +89,7 @@ class ArrayNode:
     def __init__(self, items):
         self.items = items
         
-    def eval(self, env):
+    def eval(self, env, paths=None):
         return [i.eval(env) for i in self.items]
     
 class IndexNode:
@@ -95,7 +97,7 @@ class IndexNode:
         self.arr = arr
         self.idx = idx
         
-    def eval(self, env):
+    def eval(self, env, paths=None):
         arr = self.arr.eval(env)
         idx = self.idx.eval(env)
         return arr[idx]
@@ -106,7 +108,7 @@ class IndexAssignNode:
         self.idx = idx
         self.val = val
     
-    def eval(self, env):
+    def eval(self, env, paths=None):
         arr = self.arr.eval(env)
         idx = self.idx.eval(env)
         val = self.val.eval(env)
@@ -119,7 +121,7 @@ class IfNode:
         self.body = body
         self.ebody = ebody
         
-    def eval(self, env):
+    def eval(self, env, paths=None):
         if self.cond.eval(env) != 0:
             for node in self.body:
                 node.eval(env)
@@ -132,7 +134,7 @@ class WhileNode:
             self.cond = cond
             self.body = body
             
-    def eval(self, env):
+    def eval(self, env, paths=None):
         try:
             while self.cond.eval(env) != 0:
                 for node in self.body:
@@ -144,7 +146,7 @@ class BreakNode:
     def __init__(self):
         pass
     
-    def eval(self, env):
+    def eval(self, env, paths=None):
         raise Break
     
 # function nodes
@@ -154,7 +156,7 @@ class FunctionNode:
         self.params = params
         self.body = body
     
-    def eval(self, env):
+    def eval(self, env, paths=None):
         env[self.name] = Function(self.params, self.body)
         
 class CallNode:
@@ -162,7 +164,7 @@ class CallNode:
         self.name = name
         self.args = args
     
-    def eval(self, env):
+    def eval(self, env, paths=None):
         if self.name not in env:
             raise Exception(f"Undefined function: {self.name}")
         func = env[self.name]
@@ -189,5 +191,27 @@ class ReturnNode:
     def __init__(self, expr):
         self.expr = expr
         
-    def eval(self, env):
+    def eval(self, env, paths=None):
         raise Return(self.expr.eval(env) if self.expr else None)
+    
+# import nodes
+class ImportNode:
+    def __init__(self, path):
+        self.path = path
+
+    def eval(self, env, paths):
+        from . import lexer
+        from . import parser
+        fpath = os.path.abspath(
+            os.path.join(os.path.dirname(paths[-1]), self.path.eval(env))
+        )
+        if fpath in paths:
+            raise Exception(f"Circular import: {fpath}")
+        paths.append(fpath)
+        with open(fpath) as f:
+            code = f.read()
+        tokens = lexer.tokenize(code)
+        nodes = parser.parse(tokens)
+        for node in nodes:
+            node.eval(env, paths)
+        paths.pop()

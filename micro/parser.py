@@ -156,6 +156,12 @@ def parsestmt(tokens):
             expr = None
         return ReturnNode(expr)
     
+    # import statement
+    if tokens.peek() == "import":
+        tokens.eat()
+        path = parseexpr(tokens)
+        return ImportNode(path)
+    
     # assignment
     lhs = parseexpr(tokens)
     if tokens.peek() == "=":
