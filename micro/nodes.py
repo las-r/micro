@@ -1,13 +1,31 @@
 # micro nodes
 # by las-r
 
-# data nodes
+# literal node
 class LiteralNode:
     def __init__(self, value):
         self.value = value
     
     def eval(self, env):
         return self.value
+
+# variable nodes
+class VariableNode:
+    def __init__(self, name):
+        self.name = name
+    
+    def eval(self, env):
+        if self.name in env:
+            return env[self.name]
+        raise Exception(f"Undefined variable: {self.name}")
+
+class AssignNode:
+    def __init__(self, name, expr):
+        self.name = name
+        self.expr = expr
+    
+    def eval(self, env):
+        env[self.name] = self.expr.eval(env)
     
 # operation nodes
 class UnaryOpNode:
@@ -30,6 +48,8 @@ class BinaryOpNode:
     
     def eval(self, env):
         a = self.a.eval(env)
+        if self.op == "&&": return int(a and self.b.eval(env))
+        if self.op == "||": return int(a or self.b.eval(env))
         b = self.b.eval(env)
         if self.op == "+": return a + b
         if self.op == "-": return a - b
@@ -43,6 +63,4 @@ class BinaryOpNode:
         if self.op == ">=": return int(a >= b)
         if self.op == "<": return int(a < b)
         if self.op == ">": return int(a > b)
-        if self.op == "&&": return int(a and b)
-        if self.op == "||": return int(a or b)
         raise Exception(f"Unknown binary operator: {self.op}")
