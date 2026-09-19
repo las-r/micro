@@ -15,7 +15,8 @@ def main():
         code = f.read()
         
     tokens = lexer.tokenize(code)
-    print(tokens.tokens)
+    node = parser.parseexpr(tokens)
+    print(node.eval({}))
         
 if __name__ == "__main__":
     main()
