@@ -22,7 +22,7 @@ def parseatom(tokens):
         tokens.eat()
         return expr
     
-    # literal and variable
+    # literal, variable, and function call
     tok = tokens.eat()
     if tok.startswith('"') and tok.endswith('"'):
         return LiteralNode(tok[1:-1])
@@ -32,6 +32,19 @@ def parseatom(tokens):
         try:
             return LiteralNode(float(tok))
         except ValueError:
+            if tokens.peek() == "(":
+                tokens.eat()
+                args = []
+                if tokens.peek() != ")":
+                    args.append(parseexpr(tokens))
+                    while tokens.peek() == ",":
+                        tokens.eat()
+                        args.append(parseexpr(tokens))
+                if tokens.peek() == ")":
+                    tokens.eat()
+                else:
+                    raise SyntaxError(f"Expected closing ')' in function call '{tok}'")
+                return CallNode(tok, args)
             return VariableNode(tok)
 
 # expression parser
@@ -45,12 +58,6 @@ def parseexpr(tokens):
 
 # statement parser
 def parsestmt(tokens):
-    # temporary output statement
-    if tokens.peek() == "out":
-        tokens.eat()
-        expr = parseexpr(tokens)
-        return OutputNode(expr)
-    
     # if statement
     if tokens.peek() == "if":
         tokens.eat()
@@ -81,6 +88,38 @@ def parsestmt(tokens):
     if tokens.peek() == "break":
         tokens.eat()
         return BreakNode()
+    
+    # function definition statement
+    if tokens.peek() == "func":
+        tokens.eat()
+        name = tokens.eat()
+        params = []
+        if tokens.peek() == "(":
+            tokens.eat()
+            if tokens.peek() != ")":
+                params.append(tokens.eat())
+                while tokens.peek() == ",":
+                    tokens.eat()
+                    params.append(tokens.eat())
+            if tokens.peek() == ")":
+                tokens.eat()
+            else:
+                raise SyntaxError(f"Expected closing ')' in definition of '{name}'")
+        body = []
+        while tokens.can_eat() and tokens.peek() != "end":
+            body.append(parsestmt(tokens))
+        if tokens.peek() == "end":
+            tokens.eat()
+        return FunctionNode(name, params, body)
+    
+    # return statement
+    if tokens.peek() == "return":
+        tokens.eat()
+        if tokens.can_eat() and tokens.peek() not in ["end", "if", "else", "while", "func"]:
+            expr = parseexpr(tokens)
+        else:
+            expr = None
+        return ReturnNode(expr)
     
     # variable assignment
     if tokens.can_eat() and tokens.peek(1) == "=":

@@ -1,17 +1,19 @@
 # micro nodes
 # by las-r
 
-# temporary output node
-class OutputNode:
-    def __init__(self, expr):
-        self.expr = expr
-    
-    def eval(self, env):
-        print(self.expr.eval(env))
-
-# break exception
+# exceptions
 class Break(Exception):
     pass
+
+class Return(Exception):
+    def __init__(self, value):
+        self.value = value
+
+# function object
+class Function:
+    def __init__(self, params, body):
+        self.params = params
+        self.body = body
 
 # literal node
 class LiteralNode:
@@ -111,3 +113,47 @@ class BreakNode:
     
     def eval(self, env):
         raise Break
+    
+# function nodes
+class FunctionNode:
+    def __init__(self, name, params, body):
+        self.name = name
+        self.params = params
+        self.body = body
+    
+    def eval(self, env):
+        env[self.name] = Function(self.params, self.body)
+        
+class CallNode:
+    def __init__(self, name, args):
+        self.name = name
+        self.args = args
+    
+    def eval(self, env):
+        if self.name not in env:
+            raise Exception(f"Undefined function: {self.name}")
+        func = env[self.name]
+        eargs = [arg.eval(env) for arg in self.args]
+        if callable(func):
+            return func(*eargs)
+        if isinstance(func, Function):
+            if len(self.args) != len(func.params):
+                raise Exception(f"Argument mismatch for {self.name}")
+            lenv = env.copy()
+            for param, val in zip(func.params, eargs):
+                lenv[param] = val
+            try:
+                res = None
+                for node in func.body:
+                    res = node.eval(lenv)
+                return res
+            except Return as e:
+                return e.value
+        raise Exception(f"'{self.name}' is not a callable function")
+    
+class ReturnNode:
+    def __init__(self, expr):
+        self.expr = expr
+        
+    def eval(self, env):
+        raise Return(self.expr.eval(env) if self.expr else None)
