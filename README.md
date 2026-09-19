@@ -21,12 +21,12 @@ python -m micro yourfile.mic
 | `arr`   | Arrays, written `[1, 2, 3]`           |
 | `func`  | Functions (first-class, see below)    |
 
-There is no dedicated boolean type — comparisons and logic operators produce
+There is no dedicated boolean type. Comparisons and logic operators produce
 `int`s (`0` for false, any nonzero value, conventionally `1`, for true), and
 `if`/`while` treat any nonzero value as true.
 
 ## Variables
-Variables don't need to be declared — assigning to a name creates it:
+Variables don't need to be declared, assigning to a name creates it:
 ```
 x = 10
 name = "micro"
@@ -96,14 +96,14 @@ function argument. This means:
 a = [1, 2, 3]
 b = a
 b:0 = 99
-print(a:0)   // 1 — b is an independent copy, not the same array as a
+print(a:0)   // 1 - b is an independent copy, not the same array as a
 
 func mutate(x)
     x:0 = 999
 end
 a = [1, 2, 3]
 mutate(a)
-print(a:0)   // 1 — the function got its own copy of a
+print(a:0)   // 1, the function got its own copy of a
 ```
 
 This copying is shallow. Indexing into an array
