@@ -2,10 +2,7 @@
 A small, generic interpreted scripting language.
 
 ## Overview
-micro is a minimal, dynamically-typed scripting language with C-like control
-flow, first-class functions, and arrays. It's designed to be small enough to
-read the whole implementation in one sitting, while still being expressive
-enough for real programs.
+micro is a minimal, dynamically-typed scripting language with somewhat Ruby-like syntax, first-class functions, and arrays. It's designed to be small enough to read the whole implementation in one sitting, while still being expressive enough for real programs.
 
 ## Getting Started
 ```
@@ -21,9 +18,7 @@ python -m micro yourfile.mic
 | `arr` | Arrays, written `[1, 2, 3]` |
 | `func` | Functions (first-class, see below) |
 
-There is no dedicated boolean type. Comparisons and logic operators produce
-`int`s (`0` for false, any nonzero value, conventionally `1`, for true), and
-`if`/`while` treat any nonzero value as true.
+There is no dedicated boolean type. Comparisons and logic operators produce `int`s (`0` for false, any nonzero value, conventionally `1`, for true), and `if`/`while` treat any nonzero value as true.
 
 ## Variables
 Variables don't need to be declared, assigning to a name creates it:
@@ -69,8 +64,7 @@ end
 ```
 
 ## Functions
-Define a function with `func`, and return a value with `return`
-(a bare `return` with no expression returns nothing):
+Define a function with `func`, and return a value with `return` (a bare `return` with no expression returns nothing):
 ```
 func add(a, b)
     return a + b
@@ -90,8 +84,7 @@ nums:1 = 99        // nums is now [10, 99, 30]
 ```
 
 ### Array semantics
-Arrays are copied whenever they're assigned to a variable or passed as a
-function argument. This means:
+Arrays are copied whenever they're assigned to a variable or passed as a function argument. This means:
 ```
 a = [1, 2, 3]
 b = a
@@ -106,9 +99,7 @@ mutate(a)
 print(a:0)   // 1, the function got its own copy of a
 ```
 
-This copying is shallow. Indexing into an array
-(`arr:i = val`) always mutates that array's own storage in place, which is
-how you make changes stick within a single variable.
+This copying is shallow. Indexing into an array (`arr:i = val`) always mutates that array's own storage in place, which is how you make changes stick within a single variable.
 
 ## Comments
 ```
