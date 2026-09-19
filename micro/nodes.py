@@ -16,7 +16,11 @@ class UnaryOpNode:
         self.a = a
     
     def eval(self, env):
-        pass
+        a = self.a.eval(env)
+        if self.op == "-": return -a
+        if self.op == "~": return ~a
+        if self.op == "!": return int(not a)
+        raise Exception(f"Unknown unary operator: {self.op}")
     
 class BinaryOpNode:
     def __init__(self, a, op, b):
@@ -25,4 +29,20 @@ class BinaryOpNode:
         self.b = b
     
     def eval(self, env):
-        pass
+        a = self.a.eval(env)
+        b = self.b.eval(env)
+        if self.op == "+": return a + b
+        if self.op == "-": return a - b
+        if self.op == "*": return a * b
+        if self.op == "/": return a / b
+        if self.op == "&": return a & b
+        if self.op == "|": return a | b
+        if self.op == "^": return a ^ b
+        if self.op == "==": return int(a == b)
+        if self.op == "<=": return int(a <= b)
+        if self.op == ">=": return int(a >= b)
+        if self.op == "<": return int(a < b)
+        if self.op == ">": return int(a > b)
+        if self.op == "&&": return int(a and b)
+        if self.op == "||": return int(a or b)
+        raise Exception(f"Unknown binary operator: {self.op}")
