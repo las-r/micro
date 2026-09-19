@@ -64,3 +64,15 @@ class BinaryOpNode:
         if self.op == "<": return int(a < b)
         if self.op == ">": return int(a > b)
         raise Exception(f"Unknown binary operator: {self.op}")
+    
+# control flow nodes
+class IfNode:
+    def __init__(self, cond, body):
+        self.cond = cond
+        self.body = body
+        #self.ebody = ebody
+        
+    def eval(self, env):
+        if self.cond.eval(env) != 0:
+            for node in self.body:
+                node.eval(env)

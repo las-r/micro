@@ -45,6 +45,17 @@ def parseexpr(tokens):
 
 # statement parser
 def parsestmt(tokens):
+    # if statement
+    if tokens.peek() == "if":
+        tokens.eat()
+        cond = parseexpr(tokens)
+        body = []
+        while tokens.can_eat() and tokens.peek() != "end":
+            body.append(parsestmt(tokens))
+        if tokens.peek() == "end":
+            tokens.eat()
+        return IfNode(cond, body)
+    
     # variable assignment
     if tokens.can_eat() and tokens.peek(1) == "=":
         name = tokens.eat()
