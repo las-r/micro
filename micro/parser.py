@@ -22,9 +22,14 @@ def parseatom(tokens):
         tokens.eat()
         return expr
     
-    # literal (only integer for now)
+    # literal
     tok = tokens.eat()
-    return LiteralNode(int(tok))
+    if tok.startswith('"') and tok.endswith('"'):
+        return LiteralNode(tok[1:-1])
+    try:
+        return LiteralNode(int(tok))
+    except ValueError:
+        return LiteralNode(float(tok))
 
 # expression parser
 def parseexpr(tokens):
