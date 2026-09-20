@@ -141,6 +141,7 @@ while X ... end             loop
 func X(Y, Z, ...) ... end   function definition
 break                       exit innermost loop
 return X                    return from function
+import X                    import file
 // COMMENT                  comment
 
 A:I                         index into array A
