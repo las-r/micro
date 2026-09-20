@@ -163,28 +163,22 @@ class FunctionNode:
         
 class CallNode:
     def __init__(self, name, args):
-        self.name = name
-        self.args = args
-    
+        self.name, self.args = name, args
+
     def eval(self, env, paths=None):
         if self.name not in env:
             raise Exception(f"Undefined function: {self.name}")
         func = env[self.name]
-        eargs = [arg.eval(env) for arg in self.args]
+        copy = lambda v: v.copy() if isinstance(v, list) else v
+        eargs = [a.eval(env) for a in self.args]
         if callable(func):
-            eargs = [a.copy() if isinstance(a, list) else a for a in eargs]
-            return func(*eargs)
+            return func(*[copy(a) for a in eargs])
         if isinstance(func, Function):
             if len(self.args) != len(func.params):
                 raise Exception(f"Argument mismatch for {self.name}")
-            lenv = func.env.copy()
-            for param, val in zip(func.params, eargs):
-                if isinstance(val, list):
-                    val = val.copy()
-                lenv[param] = val
+            lenv = func.env | {p: copy(v) for p, v in zip(func.params, eargs)}
             try:
-                for node in func.body:
-                    node.eval(lenv)
+                for node in func.body: node.eval(lenv)
             except Return as e:
                 return e.value
         raise Exception(f"'{self.name}' is not a callable function")
