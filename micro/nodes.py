@@ -178,7 +178,8 @@ class CallNode:
                 raise Exception(f"Argument mismatch for {self.name}")
             lenv = func.env | {p: copy(v) for p, v in zip(func.params, eargs)}
             try:
-                for node in func.body: node.eval(lenv)
+                for node in func.body: 
+                    node.eval(lenv)
             except Return as e:
                 return e.value
         raise Exception(f"'{self.name}' is not a callable function")
