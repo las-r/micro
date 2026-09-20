@@ -42,9 +42,7 @@ Comments are denoted with 2 slashes, similar to most C-like languages:
 * **Comparison:** `==`, `<`, `<=`, `>`, `>=`
 * **Logic:** `!` (not), `&&` (and), `||` (or)
 
-There is no operator precedence besides parentheses. Expressions evaluate strictly left-to-right. For example, `2 + 3 * 4` evaluates to `20`, but `2 + (3 * 4)` evaluates to `14`.
-
-There is no `!=` operator, `!(x == y)` is the recommended equivalent.
+There is no operator precedence besides parentheses. Expressions evaluate strictly left-to-right. For example, `2 + 3 * 4` evaluates to `20`, but `2 + (3 * 4)` evaluates to `14`. There is also no `!=` operator, `!(x == y)` is the recommended equivalent.
 
 ## Control Flow
 ### Conditionals
