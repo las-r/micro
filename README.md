@@ -36,6 +36,8 @@ nums = [1, 2, 3]
 **Comparison:** `==`, `<`, `<=`, `>`, `>=`\
 **Logic:** `!` (not), `&&` (and), `||` (or)
 
+There is no `!=` operator, `!(x == y)` is the recommended equivalent.
+
 ## Control Flow
 **Conditionals:**
 ```
