@@ -1,7 +1,11 @@
+// higher order functions example
+// by las-r
+
 func map(a, f)
     i = 0
     while i < len(a)
         a:i = f(a:i)
+        i = i + 1
     end
     return a
 end
@@ -10,8 +14,15 @@ func filter(a, f)
     i = 0
     while i < len(a)
         if !f(a:i)
-            del(a, i)
+            a = del(a, i)
         end
+        i = i + 1
     end
     return a
 end
+
+func double(n) return n * 2 end
+print(map([1, 2, 3, 4, 5, 6], double))
+
+func is_odd(n) return n % 2 end
+print(filter([1, 2, 3, 4, 5, 6], is_odd))

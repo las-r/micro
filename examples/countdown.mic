@@ -1,3 +1,6 @@
+// countdown example
+// by las-r
+
 n = conv(input("Enter a number: "), "int")
 
 while n > 0

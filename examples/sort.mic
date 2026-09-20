@@ -1,0 +1,20 @@
+// insertion sort example
+// by las-r
+
+func sort(a)
+    i = 1
+    while i < len(a)
+        key = a:i
+        j = i - 1
+        while (j >= 0) && (a:j > key)
+            a:(j + 1) = a:j
+            j = j - 1
+        end
+        a:(j + 1) = key
+        i = i + 1
+    end
+    return a
+end
+
+data = [27, 637, 412, 228, 893, 675, 267, 252, 974, 988]
+print(sort(data))
