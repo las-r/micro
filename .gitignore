@@ -222,3 +222,4 @@ __marimo__/
 # micro
 *.mic
 !examples/*.mic
+!libraries/*.mic
