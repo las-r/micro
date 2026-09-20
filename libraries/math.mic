@@ -1,0 +1,162 @@
+// math library
+// by las-r
+
+// constants
+math_pi = 3.14159265359
+math_e = 2.71828182846
+math_phi = 1.61803398875
+
+// power function
+func pow(a, b)
+    res = 1
+    i = b
+    while i > 0
+        res = res * a
+        i = i - 1
+    end
+    return res
+end
+
+// absolute value
+func math_abs(x)
+    if x < 0
+        return 0 - x
+    end
+    return x
+end
+
+// min and max
+func math_min(a, b)
+    if a < b
+        return a
+    end
+    return b
+end
+
+func math_max(a, b)
+    if a > b
+        return a
+    end
+    return b
+end
+
+// clamp x into [lo, hi]
+func math_clamp(x, lo, hi)
+    return math_max(lo, math_min(x, hi))
+end
+
+// square root
+func math_sqrt(x)
+    if x < 0
+        print("Error: sqrt of negative number")
+        return 0
+    end
+    if x == 0
+        return 0.0
+    end
+    guess = conv(x, "float")
+    i = 0
+    while i < 20
+        guess = (guess + x / guess) / 2
+        i = i + 1
+    end
+    return guess
+end
+
+// floor and ceil
+func math_floor(x)
+    i = conv(conv(x, "int"), "float")
+    if x < 0 && i > x
+        return i - 1
+    end
+    return i
+end
+
+func math_ceil(x)
+    i = conv(conv(x, "int"), "float")
+    if x > 0 && i < x
+        return i + 1
+    end
+    return i
+end
+
+// factorial
+func math_factorial(n)
+    res = 1
+    i = 2
+    while i <= n
+        res = res * i
+        i = i + 1
+    end
+    return res
+end
+
+// gcd and lcm
+func math_gcd(a, b)
+    x = math_abs(a)
+    y = math_abs(b)
+    while !(y == 0)
+        temp = y
+        y = x % y
+        x = temp
+    end
+    return x
+end
+
+func math_lcm(a, b)
+    return math_abs(a * b) / math_gcd(a, b)
+end
+
+// sign of a number: -1, 0, or 1
+func math_sign(x)
+    if x > 0
+        return 1
+    end
+    if x < 0
+        return 0 - 1
+    end
+    return 0
+end
+
+// logarithm functions
+func math_log2(x)
+    if x <= 0
+        print("Error: log2 of non-positive number")
+        return 0
+    end
+    val = conv(x, "float")
+    int_part = 0
+    while val >= 2
+        val = val / 2
+        int_part = int_part + 1
+    end
+    while val < 1
+        val = val * 2
+        int_part = int_part - 1
+    end
+    frac_part = 0.0
+    bit_val = 0.5
+    i = 0
+    while i < 24
+        val = val * val
+        if val >= 2
+            frac_part = frac_part + bit_val
+            val = val / 2
+        end
+        bit_val = bit_val / 2
+        i = i + 1
+    end
+    return conv(int_part, "float") + frac_part
+end
+
+func math_log10(x)
+    return log2(x) / 3.32192809489
+end
+
+func math_ln(x)
+    return log2(x) / 1.44269504089
+end
+
+func math_log(x, base)
+    return log2(x) / log2(base)
+end
