@@ -9,7 +9,7 @@ REGEX = re.compile(r"""
     (?P<NUMBER>   \d+(?:\.\d+)?) |
     (?P<STRING>   "(?:\\.|[^"\\])*") |
     (?P<KEYWORD>  \b(end|if|else|while|func|break|return|import)\b) |
-    (?P<OPER>     ==|<=|>=|&&|\|\||[+\-*/<>~&^()!:=,\[\]]) |
+    (?P<OPER>     ==|<=|>=|&&|\|\||[+\-*/%<>~&^()!:=,\[\]]) |
     (?P<IDENT>    [a-zA-Z_]\w*) |
     (?P<SKIP>     [ \t\r\n]+) |
     (?P<MISMATCH> .)

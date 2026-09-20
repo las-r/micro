@@ -31,10 +31,10 @@ nums = [1, 2, 3]
 ```
 
 ## Operators
-**Arithmetic:** `+` `-` `*` `/`\
-**Bitwise:** `~` (not / negate) `&` (and) `|` (or) `^` (xor)\
-**Comparison:** `==` `<` `<=` `>` `>=`\
-**Logic:** `!` (not) `&&` (and) `||` (or)
+**Arithmetic:** `+`, `-`, `*`, `/`, `%`\
+**Bitwise:** `~` (not / negate), `&` (and), `|` (or), `^` (xor)\
+**Comparison:** `==`, `<`, `<=`, `>`, `>=`\
+**Logic:** `!` (not), `&&` (and), `||` (or)
 
 ## Control Flow
 **Conditionals:**

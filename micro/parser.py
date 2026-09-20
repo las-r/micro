@@ -5,7 +5,7 @@ from .nodes import *
 
 # operator lists
 UNOPS = ["-", "~", "!"]
-BINOPS = ["+", "-", "*", "/", "&", "|", "^", "==", "<=", ">=", "<", ">", "&&", "||"]
+BINOPS = ["+", "-", "*", "/", "%", "&", "|", "^", "==", "<=", ">=", "<", ">", "&&", "||"]
 
 # atom parser
 def parseatom(tokens):

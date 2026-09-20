@@ -74,6 +74,7 @@ class BinaryOpNode:
         if self.op == "-": return a - b
         if self.op == "*": return a * b
         if self.op == "/": return a / b
+        if self.op == "%": return a % b
         if self.op == "&": return a & b
         if self.op == "|": return a | b
         if self.op == "^": return a ^ b
