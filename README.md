@@ -18,7 +18,7 @@ python -m micro yourfile.mic
 | `float` | Decimal numbers |
 | `str` | Strings, written `"like this"` |
 | `arr` | Arrays, written `[1, 2, 3]` |
-| `func` | Functions (first-class, see below) |
+| `func` | Functions (first-class, see [below](https://github.com/las-r/micro#functions)) |
 
 There is no dedicated boolean type. Comparisons and logic operators produce `int`s (`0` for false, any nonzero value, conventionally `1`, for true), and `if`/`while` treat any nonzero value as true.
 
@@ -91,14 +91,14 @@ Arrays are copied whenever they're assigned to a variable or passed as a functio
 a = [1, 2, 3]
 b = a
 b:0 = 99
-print(a:0)   // 1 - b is an independent copy, not the same array as a
+print(a:0)  // 1; b is an independent copy, not the same array as a
 
 func mutate(x)
     x:0 = 999
 end
 a = [1, 2, 3]
 mutate(a)
-print(a:0)   // 1, the function got its own copy of a
+print(a:0)  // 1; the function got its own copy of a
 ```
 
 This copying is shallow. Indexing into an array (`arr:i = val`) always mutates that array's own storage in place, which is how you make changes stick within a single variable.
@@ -156,5 +156,5 @@ func fact(n)
     return n * fact(n - 1)
 end
 
-print(fact(5)) // 120
+print(fact(5))  // 120
 ```
