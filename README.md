@@ -146,15 +146,3 @@ return X                    return from function
 A:I                         index into array A
 A:I = X                     assign into array A at index I
 ```
-
-## Example: Factorial
-```
-func fact(n)
-    if n <= 1
-        return 1
-    end
-    return n * fact(n - 1)
-end
-
-print(fact(5))  // 120
-```
