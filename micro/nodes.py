@@ -13,9 +13,10 @@ class Return(Exception):
 
 # function object
 class Function:
-    def __init__(self, params, body):
+    def __init__(self, params, body, env):
         self.params = params
         self.body = body
+        self.env = env
 
 # literal node
 class LiteralNode:
@@ -158,7 +159,7 @@ class FunctionNode:
         self.body = body
     
     def eval(self, env, paths=None):
-        env[self.name] = Function(self.params, self.body)
+        env[self.name] = Function(self.params, self.body, env.copy())
         
 class CallNode:
     def __init__(self, name, args):
@@ -176,7 +177,7 @@ class CallNode:
         if isinstance(func, Function):
             if len(self.args) != len(func.params):
                 raise Exception(f"Argument mismatch for {self.name}")
-            lenv = env.copy()
+            lenv = func.env.copy()
             for param, val in zip(func.params, eargs):
                 if isinstance(val, list):
                     val = val.copy()
