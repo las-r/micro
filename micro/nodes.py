@@ -159,7 +159,7 @@ class FunctionNode:
         self.body = body
     
     def eval(self, env, paths=None):
-        env[self.name] = Function(self.params, self.body, env.copy())
+        env[self.name] = Function(self.params, self.body, env)
         
 class CallNode:
     def __init__(self, name, args):
