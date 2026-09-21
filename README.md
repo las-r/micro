@@ -14,7 +14,7 @@ pip install git+https://github.com/las-r/aergia
 
 ### Usage
 ```sh
-python -m micro yourfile.mic
+micro yourfile.mic
 ```
 
 ## Syntax & Basics
