@@ -182,6 +182,7 @@ class CallNode:
                     node.eval(lenv)
             except Return as e:
                 return e.value
+            return
         raise Exception(f"'{self.name}' is not a callable function")
     
 class ReturnNode:
