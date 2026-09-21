@@ -7,6 +7,12 @@ micro is a minimal, dynamically-typed scripting language with somewhat Ruby-like
 The entirety of the source code, without any minification, is under 500 lines.
 
 ## Getting Started
+### Installation
+```sh
+pip install git+https://github.com/las-r/aergia
+```
+
+### Usage
 ```sh
 python -m micro yourfile.mic
 ```
@@ -42,7 +48,9 @@ Comments are denoted with 2 slashes, similar to most C-like languages:
 * **Comparison:** `==`, `<`, `<=`, `>`, `>=`
 * **Logic:** `!` (not), `&&` (and), `||` (or)
 
-There is no operator precedence besides parentheses. Expressions evaluate strictly left-to-right. For example, `2 + 3 * 4` evaluates to `20`, but `2 + (3 * 4)` evaluates to `14`. There is also no `!=` operator, `!(x == y)` is the recommended equivalent.
+There is no operator precedence besides parentheses. Expressions evaluate strictly left-to-right. For example, `2 + 3 * 4` evaluates to `20`, but `2 + (3 * 4)` evaluates to `14`. 
+
+There is also no `!=` operator, `!(x == y)` is the recommended equivalent.
 
 ## Control Flow
 ### Conditionals
@@ -84,7 +92,9 @@ end
 print(add(2, 3))
 ```
 
-Functions are first-class values (`type(add)` returns `"func"`) and can be used as such, such being passed as arguments or returned by another function.
+Functions are first-class values (`type(add)` returns `"func"`) and can be used as such, such being passed as arguments or returned by another function. 
+
+Assigning to a variable inside a function only affects that function's local copy and never modifies variables from an enclosing scope, even for a nested function.
 
 ## Arrays & Indexing
 Arrays are created with `[...]` and indexed with `:`:
