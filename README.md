@@ -9,7 +9,7 @@ The entirety of the source code, without any minification, is under 500 lines.
 ## Getting Started
 ### Installation
 ```sh
-pip install git+https://github.com/las-r/aergia
+pip install git+https://github.com/las-r/micro
 ```
 
 ### Usage
