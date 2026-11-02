@@ -102,6 +102,7 @@ def parsestmt(tokens):
             body.append(parsestmt(tokens))
         ebody = []
         if tokens.peek() == "else":
+            tokens.eat()
             while tokens.can_eat() and tokens.peek() != "end":
                 ebody.append(parsestmt(tokens))
         if tokens.peek() == "end":
