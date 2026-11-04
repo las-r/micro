@@ -2,7 +2,7 @@
 A small, generic interpreted scripting language.
 
 ### Alternative Implementations
-There are 2 alternative implementations of micro as of 2026:
+There are 2 alternative implementations of micro subsets as of 2026:
 - [microbe](https://github.com/las-r/microbe): A bytecode-based interpreter written in Python, lacks `import`.
 - [micro-jl](https://github.com/las-r/micro-jl): A tree-walker interpreter written in Julia, lacks `import`.
 
