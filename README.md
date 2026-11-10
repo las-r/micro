@@ -1,15 +1,15 @@
 # micro
 A small, generic interpreted scripting language.
 
-### Alternative Implementations
-There are 2 alternative implementations of micro subsets as of 2026:
-- [microbe](https://github.com/las-r/microbe): A bytecode-based interpreter written in Python, lacks `import`.
-- [micro-jl](https://github.com/las-r/micro-jl): A tree-walker interpreter written in Julia, lacks `import`.
-
 ## Overview
 micro is a minimal, dynamically-typed scripting language with somewhat Ruby-like syntax, first-class functions, and arrays. It's designed to be small enough to read the whole implementation in one sitting, while still being expressive enough for real programs.
 
 The entirety of the source code, without any minification, is under 500 lines.
+
+### Alternative Implementations
+There are 2 alternative implementations of micro subsets as of 2026:
+- [microbe](https://github.com/las-r/microbe): A bytecode-esque interpreter written in Python, lacks `import`.
+- [micro-jl](https://github.com/las-r/micro-jl): A tree-walker interpreter written in Julia, lacks `import`.
 
 ## Getting Started
 ### Installation
