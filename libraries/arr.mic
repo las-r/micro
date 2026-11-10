@@ -1,0 +1,141 @@
+// micro array library example
+// by las-r
+
+func range(n)
+    r = []
+    i = 0
+    while i < n
+        r = add(r, len(r), i)
+        i = i + 1
+    end
+    return r
+end
+
+func slice(a, s, e)
+    if s < 0
+        s = 0
+    end
+    if e > len(a)
+        e = len(a)
+    end
+    r = []
+    while s < e
+        r = add(r, len(r), a:s)
+        s = s + 1
+    end
+    return r
+end
+
+func concat(a, b)
+    i = 0
+    while i < len(b)
+        a = add(a, len(a), b:i)
+        i = i + 1
+    end
+    return a
+end
+
+func rev(a)
+    r = []
+    i = len(a) - 1
+    while i >= 0
+        r = add(r, len(r), a:i)
+        i = i - 1
+    end
+    return r
+end
+
+func indexof(a, x)
+    i = 0
+    while i < len(a)
+        if a:i == x
+            return i
+        end
+        i = i + 1
+    end
+    return -1
+end
+
+func has(a, x)
+    return indexof(a, x) >= 0
+end
+
+func sum(a)
+    r = 0
+    i = 0
+    while i < len(a)
+        r = r + a:i
+        i = i + 1
+    end
+    return r
+end
+
+func amin(a)
+    r = a:0
+    i = 1
+    while i < len(a)
+        if a:i < r
+            r = a:i
+        end
+        i = i + 1
+    end
+    return r
+end
+
+func amax(a)
+    r = a:0
+    i = 1
+    while i < len(a)
+        if a:i > r
+            r = a:i
+        end
+        i = i + 1
+    end
+    return r
+end
+
+func sort(a)
+    i = 1
+    while i < len(a)
+        x = a:i
+        j = i - 1
+        while (j >= 0) && (a:j > x)
+            a:(j + 1) = a:j
+            j = j - 1
+        end
+        a:(j + 1) = x
+        i = i + 1
+    end
+    return a
+end
+
+func map(a, f)
+    r = []
+    i = 0
+    while i < len(a)
+        r = add(r, len(r), f(a:i))
+        i = i + 1
+    end
+    return r
+end
+
+func filter(a, f)
+    r = []
+    i = 0
+    while i < len(a)
+        if f(a:i)
+            r = add(r, len(r), a:i)
+        end
+        i = i + 1
+    end
+    return r
+end
+
+func reduce(a, f, x)
+    i = 0
+    while i < len(a)
+        x = f(x, a:i)
+        i = i + 1
+    end
+    return x
+end

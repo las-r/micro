@@ -1,0 +1,146 @@
+// micro string library example
+// by las-r
+
+LOWER = "abcdefghijklmnopqrstuvwxyz"
+UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+func substr(s, a, b)
+    if a < 0
+        a = 0
+    end
+    if b > len(s)
+        b = len(s)
+    end
+    r = ""
+    while a < b
+        r = r + s:a
+        a = a + 1
+    end
+    return r
+end
+
+func find(s, t)
+    i = 0
+    n = len(s) - len(t)
+    while i <= n
+        if substr(s, i, i + len(t)) == t
+            return i
+        end
+        i = i + 1
+    end
+    return -1
+end
+
+func contains(s, t)
+    return find(s, t) >= 0
+end
+
+func startswith(s, p)
+    return substr(s, 0, len(p)) == p
+end
+
+func endswith(s, p)
+    return substr(s, len(s) - len(p), len(s)) == p
+end
+
+func repeat(s, n)
+    r = ""
+    while n > 0
+        r = r + s
+        n = n - 1
+    end
+    return r
+end
+
+func reverse(s)
+    r = ""
+    i = len(s) - 1
+    while i >= 0
+        r = r + s:i
+        i = i - 1
+    end
+    return r
+end
+
+func upper(s)
+    r = ""
+    i = 0
+    while i < len(s)
+        j = find(LOWER, s:i)
+        if j < 0
+            r = r + s:i
+        else
+            r = r + UPPER:j
+        end
+        i = i + 1
+    end
+    return r
+end
+
+func lower(s)
+    r = ""
+    i = 0
+    while i < len(s)
+        j = find(UPPER, s:i)
+        if j < 0
+            r = r + s:i
+        else
+            r = r + LOWER:j
+        end
+        i = i + 1
+    end
+    return r
+end
+
+func trim(s)
+    a = 0
+    b = len(s)
+    while (a < b) && contains(" \t\r\n", s:a)
+        a = a + 1
+    end
+    while (b > a) && contains(" \t\r\n", s:(b - 1))
+        b = b - 1
+    end
+    return substr(s, a, b)
+end
+
+func split(s, sep)
+    r = []
+    if len(sep) == 0
+        i = 0
+        while i < len(s)
+            r = add(r, len(r), s:i)
+            i = i + 1
+        end
+        return r
+    end
+    start = 0
+    i = 0
+    while i <= (len(s) - len(sep))
+        if substr(s, i, i + len(sep)) == sep
+            r = add(r, len(r), substr(s, start, i))
+            i = i + len(sep)
+            start = i
+        else
+            i = i + 1
+        end
+    end
+    return add(r, len(r), substr(s, start, len(s)))
+end
+
+func join(a, sep)
+    r = ""
+    i = 0
+    while i < len(a)
+        if i > 0
+            r = r + sep
+        end
+        r = r + conv(a:i, "str")
+        i = i + 1
+    end
+    return r
+end
+
+func replace(s, a, b)
+    return join(split(s, a), b)
+end
