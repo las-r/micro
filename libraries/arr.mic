@@ -1,9 +1,9 @@
 // micro array library example
 // by las-r
 
-func range(n)
+func range(m, n)
     r = []
-    i = 0
+    i = m
     while i < n
         r = add(r, len(r), i)
         i = i + 1
