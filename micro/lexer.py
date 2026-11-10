@@ -22,7 +22,7 @@ class Tokens:
         self.i = 0
         
     def can_eat(self, inc=1):
-        return self.i < len(self.tokens) - inc
+        return self.i + inc <= len(self.tokens)
         
     def eat(self, inc=1):
         self.i += inc
@@ -32,6 +32,11 @@ class Tokens:
         if self.i + off >= len(self.tokens):
             return ""
         return self.tokens[self.i + off]
+    
+    def expect_value(self, value):
+        if self.peek() != value:
+            raise SyntaxError(f"Expected {value}, got {self.peek()}")
+        self.eat()
     
 # tokenizer
 def tokenize(code):

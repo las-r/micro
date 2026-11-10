@@ -57,7 +57,7 @@ class UnaryOpNode:
         a = self.a.eval(env)
         if self.op == "-": return -a
         if self.op == "~": return ~a
-        if self.op == "!": return int(not a)
+        if self.op == "!": return int(a == 0)
         raise Exception(f"Unknown unary operator: {self.op}")
     
 class BinaryOpNode:
@@ -68,8 +68,8 @@ class BinaryOpNode:
     
     def eval(self, env, paths=None):
         a = self.a.eval(env)
-        if self.op == "&&": return int(a and self.b.eval(env))
-        if self.op == "||": return int(a or self.b.eval(env))
+        if self.op == "&&": return int(a != 0 and self.b.eval(env) != 0)
+        if self.op == "||": return int(a != 0 or self.b.eval(env) != 0)
         b = self.b.eval(env)
         if self.op == "+": return a + b
         if self.op == "-": return a - b
@@ -126,10 +126,10 @@ class IfNode:
     def eval(self, env, paths=None):
         if self.cond.eval(env) != 0:
             for node in self.body:
-                node.eval(env)
+                node.eval(env, paths)
         else:
             for node in self.ebody:
-                node.eval(env)
+                node.eval(env, paths)
                 
 class WhileNode:
     def __init__(self, cond, body):
@@ -140,7 +140,7 @@ class WhileNode:
         try:
             while self.cond.eval(env) != 0:
                 for node in self.body:
-                    node.eval(env)
+                    node.eval(env, paths)
         except Break:
             pass
         
@@ -176,7 +176,7 @@ class CallNode:
         if isinstance(func, Function):
             if len(self.args) != len(func.params):
                 raise Exception(f"Argument mismatch for {self.name}")
-            lenv = func.env | {p: copy(v) for p, v in zip(func.params, eargs)}
+            lenv = {k: copy(v) for k, v in func.env.items()} | {p: copy(v) for p, v in zip(func.params, eargs)}
             try:
                 for node in func.body: 
                     node.eval(lenv)

@@ -1,3 +1,4 @@
+import re
 from .nodes import *
 
 # micro parser
@@ -8,7 +9,7 @@ UNOPS = ["-", "~", "!"]
 BINOPS = ["+", "-", "*", "/", "%", "&", "|", "^", "==", "<=", ">=", "<", ">", "&&", "||"]
 
 # atom parser
-def parseatom(tokens):
+def parseatom(tokens, index=True):
     # array literals
     if tokens.peek() == "[":
         tokens.eat()
@@ -18,44 +19,42 @@ def parseatom(tokens):
             while tokens.peek() == ",":
                 tokens.eat()
                 items.append(parseexpr(tokens))
-        if tokens.peek() == "]":
-            tokens.eat()
-        else:
-            raise SyntaxError(f"Expected closing ']' in array definition")
+        tokens.expect_value("]")
         node = ArrayNode(items)
-        while tokens.peek() == ":":
+        while index and tokens.peek() == ":":
             tokens.eat()
-            iexpr = parseatom(tokens)
+            iexpr = parseatom(tokens, False)
             node = IndexNode(node, iexpr)
         return node
 
     # unary ops
     if tokens.peek() in UNOPS:
         op = tokens.eat()
-        a = parseatom(tokens)
+        a = parseatom(tokens, index)
         return UnaryOpNode(op, a)
 
     # parentheses
     if tokens.peek() == "(":
         tokens.eat()
         expr = parseexpr(tokens)
-        tokens.eat()
+        tokens.expect_value(")")
         node = expr
-        while tokens.peek() == ":":
+        while index and tokens.peek() == ":":
             tokens.eat()
-            iexpr = parseatom(tokens)
+            iexpr = parseatom(tokens, False)
             node = IndexNode(node, iexpr)
         return node
 
     # literal, variable, and function call
     tok = tokens.eat()
     if tok.startswith('"') and tok.endswith('"'):
-        node = LiteralNode(tok[1:-1])
+        node = LiteralNode(re.sub(r"\\(.)", lambda m: {"n": "\n", "t": "\t", "r": "\r"}.get(m.group(1), m.group(1)), tok[1:-1]))
     else:
         try:
             node = LiteralNode(int(tok))
         except ValueError:
             try:
+                if not tok[0].isdigit(): raise ValueError
                 node = LiteralNode(float(tok))
             except ValueError:
                 if tokens.peek() == "(":
@@ -66,18 +65,15 @@ def parseatom(tokens):
                         while tokens.peek() == ",":
                             tokens.eat()
                             args.append(parseexpr(tokens))
-                    if tokens.peek() == ")":
-                        tokens.eat()
-                    else:
-                        raise SyntaxError(f"Expected closing ')' in function call '{tok}'")
+                    tokens.expect_value(")")
                     node = CallNode(tok, args)
                 else:
                     node = VariableNode(tok)
 
     # array indexing
-    while tokens.peek() == ":":
+    while index and tokens.peek() == ":":
         tokens.eat()
-        iexpr = parseatom(tokens)
+        iexpr = parseatom(tokens, False)
         node = IndexNode(node, iexpr)
 
     return node
@@ -105,8 +101,7 @@ def parsestmt(tokens):
             tokens.eat()
             while tokens.can_eat() and tokens.peek() != "end":
                 ebody.append(parsestmt(tokens))
-        if tokens.peek() == "end":
-            tokens.eat()
+        tokens.expect_value("end")
         return IfNode(cond, body, ebody)
     
     # while statement
@@ -116,8 +111,7 @@ def parsestmt(tokens):
         body = []
         while tokens.can_eat() and tokens.peek() != "end":
             body.append(parsestmt(tokens))
-        if tokens.peek() == "end":
-            tokens.eat()
+        tokens.expect_value("end")
         return WhileNode(cond, body)
     
     # break statement
@@ -137,15 +131,12 @@ def parsestmt(tokens):
                 while tokens.peek() == ",":
                     tokens.eat()
                     params.append(tokens.eat())
-            if tokens.peek() == ")":
-                tokens.eat()
-            else:
-                raise SyntaxError(f"Expected closing ')' in definition of '{name}'")
+            tokens.expect_value(")")
+            tokens.eat()
         body = []
         while tokens.can_eat() and tokens.peek() != "end":
             body.append(parsestmt(tokens))
-        if tokens.peek() == "end":
-            tokens.eat()
+        tokens.expect_value("end")
         return FunctionNode(name, params, body)
     
     # return statement
