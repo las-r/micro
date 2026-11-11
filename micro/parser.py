@@ -4,9 +4,10 @@ from .nodes import *
 # micro parser
 # by las-r
 
-# operator lists
+# constant lists
 UNOPS = ["-", "~", "!"]
 BINOPS = ["+", "-", "*", "/", "%", "&", "|", "^", "==", "<=", ">=", "<", ">", "&&", "||"]
+ESCAPES = {"n": "\n", "t": "\t", "r": "\r"}
 
 # atom parser
 def parseatom(tokens, index=True):
@@ -47,28 +48,26 @@ def parseatom(tokens, index=True):
 
     # literal, variable, and function call
     tok = tokens.eat()
-    if tok.startswith('"') and tok.endswith('"'):
-        node = LiteralNode(re.sub(r"\\(.)", lambda m: {"n": "\n", "t": "\t", "r": "\r"}.get(m.group(1), m.group(1)), tok[1:-1]))
-    else:
-        try:
-            node = LiteralNode(int(tok))
-        except ValueError:
-            try:
-                if not tok[0].isdigit(): raise ValueError
-                node = LiteralNode(float(tok))
-            except ValueError:
-                if tokens.peek() == "(":
+    c = tok[0]
+    if c == '"':
+        node = LiteralNode(re.sub(r"\\(.)", lambda m: ESCAPES.get(m.group(1), m.group(1)), tok[1:-1]))
+    elif c.isdigit():
+        node = LiteralNode(float(tok) if "." in tok else int(tok))
+    elif c.isalpha() or c == "_":
+        if tokens.peek() == "(":
+            tokens.eat()
+            args = []
+            if tokens.peek() != ")":
+                args.append(parseexpr(tokens))
+                while tokens.peek() == ",":
                     tokens.eat()
-                    args = []
-                    if tokens.peek() != ")":
-                        args.append(parseexpr(tokens))
-                        while tokens.peek() == ",":
-                            tokens.eat()
-                            args.append(parseexpr(tokens))
-                    tokens.expect_value(")")
-                    node = CallNode(tok, args)
-                else:
-                    node = VariableNode(tok)
+                    args.append(parseexpr(tokens))
+            tokens.expect_value(")")
+            node = CallNode(tok, args)
+        else:
+            node = VariableNode(tok)
+    else:
+        raise SyntaxError(f"Unexpected token: {tok}")
 
     # array indexing
     while index and tokens.peek() == ":":
@@ -132,7 +131,6 @@ def parsestmt(tokens):
                     tokens.eat()
                     params.append(tokens.eat())
             tokens.expect_value(")")
-            tokens.eat()
         body = []
         while tokens.can_eat() and tokens.peek() != "end":
             body.append(parsestmt(tokens))
