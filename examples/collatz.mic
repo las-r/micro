@@ -1,0 +1,17 @@
+// collatz example
+// by las-r
+
+n = conv(input("Enter a starting number: "), "int")
+steps = 0
+
+while n > 1
+    if n % 2 == 0
+        n = conv(n / 2, "int")
+    else
+        n = (n * 3) + 1
+    end
+    steps = steps + 1
+    print(n)
+end
+
+print("Reached 1 in " + conv(steps, "str") + " steps")

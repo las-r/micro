@@ -1,0 +1,15 @@
+// decimal to binary example
+// by las-r
+
+n = conv(input("Enter a number: "), "int")
+
+if n == 0
+    print("0")
+else
+    bits = ""
+    while n > 0
+        bits = conv(n & 1, "str") + bits
+        n = conv(n / 2, "int")
+    end
+    print(bits)
+end
