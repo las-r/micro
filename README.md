@@ -6,6 +6,10 @@ micro is a minimal, dynamically-typed scripting language with somewhat Ruby-like
 
 The entirety of the source code, without any minification, is under 500 lines.
 
+### Editor Support
+micro has language support for the following editors as of 2026:
+- [VSCode](https://github.com/las-r/micro-vscode)
+
 ### Alternative Implementations
 There are 2 alternative implementations of micro subsets as of 2026:
 - [microbe](https://github.com/las-r/microbe): A bytecode-esque interpreter written in Python, lacks `import`.
