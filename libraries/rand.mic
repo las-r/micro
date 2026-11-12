@@ -1,0 +1,14 @@
+// micro pseudorandom library example
+// by las-r
+
+func rnext(s)
+    return (s * 1103515243 + 11102011) % 2147483648
+end
+
+func rrange(s, lo, hi)
+    return lo + (conv(rnext(s) / 65536, "int") % (hi - lo))
+end
+
+func rfloat(s)
+    return rnext(s) / 2147483648
+end
