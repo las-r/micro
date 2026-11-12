@@ -1,5 +1,5 @@
 import re
-from .nodes import *
+from micro.nodes import *
 
 # micro parser
 # by las-r

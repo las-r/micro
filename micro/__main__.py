@@ -1,8 +1,8 @@
 import os
 import sys
-from . import lexer
-from . import parser
-from . import nodes
+import micro.lexer
+import micro.parser
+import micro.nodes
 
 # micro
 # by las-r
@@ -11,7 +11,7 @@ from . import nodes
 def ibtype(x):
     if isinstance(x, list): return "arr"
     if isinstance(x, float): return "float"
-    if isinstance(x, nodes.Function) or callable(x): return "func"
+    if isinstance(x, micro.nodes.Function) or callable(x): return "func"
     if isinstance(x, int): return "int"
     if isinstance(x, str): return "str"
     
@@ -41,8 +41,8 @@ def main():
     with open(file) as f:
         code = f.read()
         
-    tokens = lexer.tokenize(code)
-    nodes = parser.parse(tokens)
+    tokens = micro.lexer.tokenize(code)
+    nodes = micro.parser.parse(tokens)
     
     env = {
         "print": print,
