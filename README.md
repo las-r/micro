@@ -12,8 +12,8 @@ micro has language support for the following editors as of 2026:
 
 ### Alternative Implementations
 There are 2 alternative implementations of micro subsets as of 2026:
-- [microbe](https://github.com/las-r/microbe): A bytecode-esque interpreter written in Python, lacks `import`.
-- [micro-jl](https://github.com/las-r/micro-jl): A tree-walker interpreter written in Julia, lacks `import`.
+- [microbe](https://github.com/las-r/microbe): An older bytecode-esque fork written in Python, lacks `import`, `else if`, and `!=`.
+- [micro-jl](https://github.com/las-r/micro-jl): An older tree-walker fork written in Julia, lacks `import`, `else if`, and `!=`.
 
 ## Getting Started
 ### Installation
