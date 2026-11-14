@@ -103,7 +103,7 @@ print(add(2, 3))
 
 Functions are first-class values (`type(add)` returns `"func"`) and can be used as such, such being passed as arguments or returned by another function. 
 
-Assigning to a variable inside a function only affects that function's local copy and never modifies variables from an enclosing scope, even for a nested function.
+There is no variable shadowing. The local environment within a function can only read from the parent environment, it cannot modify it in any way.
 
 ## Arrays & Indexing
 Arrays are created with `[...]` and indexed with `:`:
@@ -129,7 +129,7 @@ mutate(a)
 print(a:0)  // 1; x was a copy of a
 ```
 
-This copying is shallow. Direct element assignment (`arr:idx = val`) is the only way to mutate an array in place.
+Arrays are copied by value. Direct element assignment (`arr:idx = val`) is the only way to mutate an array in place.
 
 ## Module Imports
 Import another `.mic` file using `import`:
@@ -165,6 +165,6 @@ return X                    return from function
 import X                    import file
 // COMMENT                  comment
 
-A:I                         index into array A
-A:I = X                     assign into array A at index I
+A:I       index into array A
+A:I = X   assign into array A at index I
 ```
