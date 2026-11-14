@@ -1,28 +1,17 @@
 # micro
-A small, generic interpreted scripting language.
-
-## Overview
-micro is a minimal, dynamically-typed scripting language with somewhat Ruby-like syntax, first-class functions, and arrays. It's designed to be small enough to read the whole implementation in one sitting, while still being expressive enough for real programs.
-
-The entirety of the source code is composed of less than 500 LOC.
+A small, dynamically-typed scripting language with Ruby-like syntax, first-class functions, and arrays.
 
 ### Editor Support
-micro has language support for the following editors as of 2026:
 - [VSCode](https://github.com/las-r/micro-vscode)
 
 ### Alternative Implementations
-There are 2 alternative implementations of micro subsets as of 2026:
-- [microbe](https://github.com/las-r/microbe): An older bytecode-esque fork written in Python, lacks `import`, `else if`, and `!=`.
-- [micro-jl](https://github.com/las-r/micro-jl): An older tree-walker fork written in Julia, lacks `import`, `else if`, and `!=`.
+Older subsets of micro, both lacking `import`, `else if`, and `!=`:
+- [microbe](https://github.com/las-r/microbe): bytecode-esque fork written in Python
+- [micro-jl](https://github.com/las-r/micro-jl): tree-walker fork written in Julia
 
 ## Getting Started
-### Installation
 ```sh
 pip install git+https://github.com/las-r/micro
-```
-
-### Usage
-```sh
 micro yourfile.mic
 ```
 
@@ -36,28 +25,23 @@ micro yourfile.mic
 | `arr` | Arrays, written `[1, 2, 3]` |
 | `func` | Functions (first-class) |
 
-There is no dedicated boolean type. Comparisons and logic operators produce `int`s (`0` for false, any nonzero value, conventionally `1`, for true), and `if`/`while` treat any nonzero value as true.
+There is no boolean type. Comparisons and logic operators produce `int`s (`0` for false, nonzero for true), and `if`/`while` treat any nonzero value as true.
 
-Variables don't need to be explicitly declared, assigning to a name creates it:
+Assigning to a name creates the variable, and comments start with `//`:
 ```
 x = 10
 name = "micro"
 nums = [1, 2, 3]
-```
-
-### Comments
-Comments are denoted with 2 slashes, similar to most C-like languages:
-```
 // This is a comment!
 ```
 
 ### Operators
 * **Arithmetic:** `+`, `-`, `*`, `/`, `%`
-* **Bitwise:** `~` (not / negate), `&` (and), `|` (or), `^` (xor)
+* **Bitwise:** `~` (not), `&`, `|`, `^`
 * **Comparison:** `==`, `!=`, `<`, `<=`, `>`, `>=`
-* **Logic:** `!` (not), `&&` (and), `||` (or)
+* **Logic:** `!`, `&&`, `||`
 
-There is no operator precedence besides parentheses. Expressions evaluate strictly left-to-right. For example, `2 + 3 * 4` evaluates to `20`, but `2 + (3 * 4)` evaluates to `14`. 
+There is no operator precedence besides parentheses. Expressions evaluate strictly left to right, so `2 + 3 * 4` is `20`, but `2 + (3 * 4)` is `14`.
 
 ## Control Flow
 ### Conditionals
@@ -70,10 +54,7 @@ else
     print("zero")
 end
 ```
-
-An `else if` chain is optional, shares a single `end`, and the final `else` is also optional.
-
-`else if` must be written on one line. If `if` starts on the next line, it is a separate, nested `if` that needs its own `end`:
+The `else if` chain and final `else` are optional and share a single `end`. `else if` must be written on one line. If `if` starts on the next line, it's a separate nested `if` that needs its own `end`:
 ```
 if x > 0
     print("positive")
@@ -92,8 +73,7 @@ while i < 5
     i = i + 1
 end
 ```
-
-Use `break` to exit a loop early:
+Use `break` to exit the innermost loop early:
 ```
 while 1
     if done == 1
@@ -103,7 +83,6 @@ end
 ```
 
 ## Functions
-Define a function with `func`, and return a value with `return` (a bare `return` with no expression returns nothing):
 ```
 func add(a, b)
     return a + b
@@ -111,21 +90,19 @@ end
 
 print(add(2, 3))
 ```
+A bare `return` returns nothing. Functions are first-class values (`type(add)` is `"func"`), so they can be passed as arguments or returned from other functions.
 
-Functions are first-class values (`type(add)` returns `"func"`) and can be used as such, such being passed as arguments or returned by another function. 
-
-There is no variable shadowing. The local environment within a function can only read from the parent environment, it cannot modify it in any way.
+There is no variable shadowing: a function's local environment can read from its parent environment but cannot modify it.
 
 ## Arrays & Indexing
-Arrays are created with `[...]` and indexed with `:`:
+Arrays are indexed with `:`, and `arr:idx = val` is the only way to mutate an array in place:
 ```
 nums = [10, 20, 30]
 print(nums:0)  // 10
 nums:1 = 99    // nums is now [10, 99, 30]
 ```
 
-### Array Semantics
-Arrays are copied strictly by value whenever they are assigned to a variable or passed as a function argument:
+Arrays are copied by value when assigned to a variable or passed to a function:
 ```
 a = [1, 2, 3]
 b = a
@@ -135,35 +112,30 @@ print(a:0)  // 1; b is an independent copy
 func mutate(x)
     x:0 = 999
 end
-a = [1, 2, 3]
 mutate(a)
 print(a:0)  // 1; x was a copy of a
 ```
 
-Arrays are copied by value. Direct element assignment (`arr:idx = val`) is the only way to mutate an array in place.
-
 ## Module Imports
-Import another `.mic` file using `import`:
 ```
 import "math.mic"
 
-print(square(5))
+print(pow(5, 2))
 ```
-
-The imported file is executed in the current environment, sharing variable and function scope. Import paths are resolved relative to the importing file.
+The imported file runs in the current environment, sharing variable and function scope. Paths resolve relative to the importing file.
 
 ## Built-in Functions
-| Function | Return Type | Description |
+| Function | Returns | Description |
 |---|---|---|
-| `print(x)`      | | Prints `x` |
-| `input(x)`      | | Prompts with `x` and reads a line |
-| `type(x)`       | `str` | Returns the type of `x` (`"int"`, `"arr"`, etc.) |
-| `conv(x, t)`    | `<t>` | Converts `x` to type `t` (`"int"`, `"float"`, `"str"`, `"arr"`) |
-| `len(x)`        | `int` | Length of an array or string |
-| `add(a, i, x)`  | `arr` | Returns a copy of `a` with `x` inserted at index `i` |
-| `del(a, i)`     | `arr` | Returns a copy of `a` with the item at index `i` removed |
+| `print(x)` | | Prints `x` |
+| `input(x)` | | Prompts with `x` and reads a line |
+| `type(x)` | `str` | Type of `x` (`"int"`, `"arr"`, etc.) |
+| `conv(x, t)` | `<t>` | Converts `x` to `"int"`, `"float"`, `"str"`, or `"arr"` |
+| `len(x)` | `int` | Length of an array or string |
+| `add(a, i, x)` | `arr` | Copy of `a` with `x` inserted at index `i` |
+| `del(a, i)` | `arr` | Copy of `a` with the item at index `i` removed |
 
-`add` and `del` return a modified copy and do not mutate the original array.
+`add` and `del` return a modified copy and never mutate the original.
 
 ## Grammar Reference
 ```
