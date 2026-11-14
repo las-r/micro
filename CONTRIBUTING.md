@@ -10,13 +10,13 @@ micro yourfile.mic
 ```
 
 ## Guidelines
-- **No new features.** micro is meant to stay small and complete, so feature requests will be closed. Fork it instead, and I'm more than happy to link it in the README.
+- **No new features.** micro is meant to stay small and complete, so feature requests will be closed. Fork it instead, and I'm more than happy to link your fork in the README.
 - **Bug fixes are welcome.** Open a pull request with a short `.mic` snippet that reproduces the problem.
-- Match the existing code style, and update the README if a fix changes documented behavior.
+- Match the existing code style, and please don't run an autolinter over the files.
 
 ## Pull Requests
 1. Fork the repo and create a branch.
-2. Make your change and test it with a few `.mic` programs.
+2. Make your fix and confirm it resolves your reproducing snippet.
 3. Open a PR describing what changed and why.
 
 ## Reporting Bugs
