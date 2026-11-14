@@ -7,20 +7,18 @@ import micro.nodes
 # micro
 # by las-r
 
+# constants
+TYPES = {"arr": list, "float": float, "int": int, "str": str}
+
 # inbuilt functions
 def ibtype(x):
-    if isinstance(x, list): return "arr"
-    if isinstance(x, float): return "float"
     if isinstance(x, micro.nodes.Function) or callable(x): return "func"
-    if isinstance(x, int): return "int"
-    if isinstance(x, str): return "str"
+    return {v: k for k, v in TYPES.items()}[type(x)]
     
 def ibconv(x, t):
-    if t == "arr": return list(x)
-    if t == "float": return float(x)
-    if t == "int": return int(x)
-    if t == "str": return str(x)
-    raise Exception(f"Unknown convertible type: {t}")
+    if t not in TYPES:
+        raise Exception(f"Unknown convertible type: {t}")
+    return TYPES[t](x)
 
 def ibadd(a, i, x):
     ac = a.copy()
