@@ -1,7 +1,24 @@
+import operator as op
 import os
 
 # micro nodes
 # by las-r
+
+# constants
+UNOPS = {
+    "-": op.neg, "~": op.inv,
+    "!": lambda a: int(a == 0)
+}
+BINOPS = {
+    "+": op.add, "-": op.sub, "*": op.mul, "/": op.truediv,
+    "%": op.mod, "&": op.and_, "|": op.or_, "^": op.xor,
+    "==": lambda a, b: int(a == b),
+    "!=": lambda a, b: int(a != b),
+    ">=": lambda a, b: int(a >= b),
+    "<=": lambda a, b: int(a <= b),
+    ">": lambda a, b: int(a > b),
+    "<": lambda a, b: int(a < b),
+}
 
 # exceptions
 class Break(Exception):
@@ -55,9 +72,8 @@ class UnaryOpNode:
     
     def eval(self, env, paths=None):
         a = self.a.eval(env)
-        if self.op == "-": return -a
-        if self.op == "~": return ~a
-        if self.op == "!": return int(a == 0)
+        if self.op in UNOPS:
+            return UNOPS[self.op](a)
         raise Exception(f"Unknown unary operator: {self.op}")
     
 class BinaryOpNode:
@@ -71,19 +87,8 @@ class BinaryOpNode:
         if self.op == "&&": return int(a != 0 and self.b.eval(env) != 0)
         if self.op == "||": return int(a != 0 or self.b.eval(env) != 0)
         b = self.b.eval(env)
-        if self.op == "+": return a + b
-        if self.op == "-": return a - b
-        if self.op == "*": return a * b
-        if self.op == "/": return a / b
-        if self.op == "%": return a % b
-        if self.op == "&": return a & b
-        if self.op == "|": return a | b
-        if self.op == "^": return a ^ b
-        if self.op == "==": return int(a == b)
-        if self.op == "<=": return int(a <= b)
-        if self.op == ">=": return int(a >= b)
-        if self.op == "<": return int(a < b)
-        if self.op == ">": return int(a > b)
+        if self.op in BINOPS:
+            return BINOPS[self.op](a, b)
         raise Exception(f"Unknown binary operator: {self.op}")
     
 # array nodes

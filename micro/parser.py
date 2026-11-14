@@ -5,8 +5,6 @@ from micro.nodes import *
 # by las-r
 
 # constant lists
-UNOPS = ["-", "~", "!"]
-BINOPS = ["+", "-", "*", "/", "%", "&", "|", "^", "==", "<=", ">=", "<", ">", "&&", "||"]
 ESCAPES = {"n": "\n", "t": "\t", "r": "\r"}
 
 # atom parser
@@ -29,7 +27,7 @@ def parseatom(tokens, index=True):
         return node
 
     # unary ops
-    if tokens.peek() in UNOPS:
+    if tokens.peek() in [*UNOPS]: # pyright: ignore[reportUndefinedVariable]
         op = tokens.eat()
         a = parseatom(tokens, index)
         return UnaryOpNode(op, a)
@@ -80,7 +78,7 @@ def parseatom(tokens, index=True):
 # expression parser
 def parseexpr(tokens):
     a = parseatom(tokens)
-    while tokens.can_eat() and tokens.peek() in BINOPS:
+    while tokens.can_eat() and tokens.peek() in [*BINOPS, "&&", "||"]: # pyright: ignore[reportUndefinedVariable]
         op = tokens.eat()
         b = parseatom(tokens)
         a = BinaryOpNode(a, op, b)
