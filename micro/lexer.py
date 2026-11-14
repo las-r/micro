@@ -8,7 +8,7 @@ REGEX = re.compile(r"""
     (?P<COMMENT>  //[^\n]*) |
     (?P<NUMBER>   \d+(?:\.\d+)?) |
     (?P<STRING>   "(?:\\.|[^"\\])*") |
-    (?P<KEYWORD>  \b(end|if|else|while|func|break|return|import)\b) |
+    (?P<KEYWORD>  \b(end|if|else[ \t]+if|else|while|func|break|return|import)\b) |
     (?P<OPER>     ==|<=|>=|&&|\|\||[+\-*/%<>~&\|^()!:=,\[\]]) |
     (?P<IDENT>    [a-zA-Z_]\w*) |
     (?P<SKIP>     [ \t\r\n]+) |
@@ -48,5 +48,7 @@ def tokenize(code):
             continue
         elif typ == "MISMATCH":
             raise SyntaxError(f"Unexpected token: {val}")
+        elif typ == "KEYWORD" and val.startswith("else") and val != "else":
+            val = "else if"
         tokens.append(val)
     return Tokens(tokens)

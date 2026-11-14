@@ -64,12 +64,25 @@ There is no operator precedence besides parentheses. Expressions evaluate strict
 ```
 if x > 0
     print("positive")
+else if x < 0
+    print("negative")
 else
-    print("not positive")
+    print("zero")
 end
 ```
 
-The `else` branch is optional.
+An `else if` chain is optional, shares a single `end`, and the final `else` is also optional.
+
+`else if` must be written on one line. If `if` starts on the next line, it is a separate, nested `if` that needs its own `end`:
+```
+if x > 0
+    print("positive")
+else
+    if x < 0
+        print("negative")
+    end
+end
+```
 
 ### Loops
 ```
@@ -154,14 +167,14 @@ The imported file is executed in the current environment, sharing variable and f
 
 ## Grammar Reference
 ```
-V = X                       assignment
-if X ... else ... end       conditional
-while X ... end             loop
-func X(Y, Z, ...) ... end   function definition
-break                       exit innermost loop
-return X                    return from function
-import X                    import file
-// COMMENT                  comment
+V = X                                 assignment
+if X ... else if X ... else ... end   conditional
+while X ... end                       loop
+func X(Y, Z, ...) ... end             function definition
+break                                 exit innermost loop
+return X                              return from function
+import X                              import file
+// COMMENT                            comment
 
 A:I       index into array A
 A:I = X   assign into array A at index I

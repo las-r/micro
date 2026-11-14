@@ -87,12 +87,14 @@ def parseexpr(tokens):
 # statement parser
 def parsestmt(tokens):
     # if statement
-    if tokens.peek() == "if":
+    if tokens.peek() in ("if", "else if"):
         tokens.eat()
         cond = parseexpr(tokens)
         body = []
-        while tokens.can_eat() and tokens.peek() not in ("else", "end"):
+        while tokens.can_eat() and tokens.peek() not in ("else if", "else", "end"):
             body.append(parsestmt(tokens))
+        if tokens.peek() == "else if":
+            return IfNode(cond, body, [parsestmt(tokens)])
         ebody = []
         if tokens.peek() == "else":
             tokens.eat()
