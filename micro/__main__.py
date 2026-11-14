@@ -16,9 +16,9 @@ def ibtype(x):
     return {v: k for k, v in TYPES.items()}[type(x)]
     
 def ibconv(x, t):
-    if t not in TYPES:
-        raise Exception(f"Unknown convertible type: {t}")
-    return TYPES[t](x)
+    if t in TYPES:
+        return TYPES[t](x)
+    raise Exception(f"Unknown convertible type: {t}")
 
 def ibadd(a, i, x):
     ac = a.copy()
