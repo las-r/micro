@@ -4,10 +4,13 @@ A small, dynamically-typed scripting language with Ruby-like syntax, first-class
 ### Editor Support
 - [VSCode](https://github.com/las-r/micro-vscode)
 
-### Alternative Implementations
-Older subsets of micro, both lacking `import`, `else if`, and `!=`:
+### Forks
+Subsets of micro, lacking features present in the standard implementation:
 - [microbe](https://github.com/las-r/microbe): bytecode-esque fork written in Python
 - [micro-jl](https://github.com/las-r/micro-jl): tree-walker fork written in Julia
+
+Supersets of micro, adding features not present in the standard implementation:
+- [macro](https://github.com/las-r/macro): extension adding for loops, maps, and closures, written in Python
 
 ## Getting Started
 ```sh
