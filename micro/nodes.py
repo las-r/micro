@@ -1,3 +1,4 @@
+from copy import deepcopy
 import operator as op
 import os
 
@@ -174,7 +175,7 @@ class CallNode:
         if self.name not in env:
             raise Exception(f"Undefined function: {self.name}")
         func = env[self.name]
-        copy = lambda v: v.copy() if isinstance(v, list) else v
+        copy = lambda v: deepcopy(v) if isinstance(v, list) else v
         eargs = [a.eval(env) for a in self.args]
         if callable(func):
             return func(*[copy(a) for a in eargs])
