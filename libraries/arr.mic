@@ -139,3 +139,18 @@ func reduce(a, f, x)
     end
     return x
 end
+
+func zip(a, b)
+    if len(a) < len(b)
+        l = len(a)
+    else
+        l = len(b)
+    end
+    out = []
+    i = 0
+    while i < l
+        out = add(out, len(out), [a:i, b:i])
+        i = i + 1
+    end
+    return out
+end
