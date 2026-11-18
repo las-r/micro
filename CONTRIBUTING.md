@@ -11,6 +11,7 @@ micro yourfile.mic
 
 ## Guidelines
 - **No new features.** micro is meant to stay small and complete, so feature requests will be closed. Fork it instead, and I'm more than happy to link your fork in the README.
+- **No AI agents.** micro is made to be understood by humans and in no part of the development of this repository will an AI agent contribute.
 - **Bug fixes are welcome.** Open a pull request with a short `.mic` snippet that reproduces the problem.
 - Match the existing code style, and please don't run an autolinter over the files.
 
