@@ -1,6 +1,18 @@
 # micro
 A small, dynamically-typed scripting language with Ruby-like syntax, first-class functions, and arrays.
 
+```
+func fact(n)
+    if n <= 1
+        return 1
+    end
+    return n * fact(n - 1)
+end
+
+n = conv(input("Enter n for n!: "), "int")
+print(fact(n))
+```
+
 ### Editor Support
 - [VSCode](https://github.com/las-r/micro-vscode)
 
